@@ -6,4 +6,10 @@ class Answer < ActiveRecord::Base
   validates :poll_id, :presence => true
 
   belongs_to :polls
+
+  def self.add(choice, poll)
+    a = Answer.create(:choice => choice, :poll_id => poll.id)
+    puts a.errors.full_messages unless a.errors.empty?
+    a
+  end
 end

@@ -26,7 +26,7 @@ def log_in
   if User.where(:name => name).nil?
     user = User.add(name)
   else
-    user = User.where(:name => name).limit(1)
+    user = User.where(:name => name)[0]
   end
 end
 
@@ -47,7 +47,7 @@ def answer_poll(user, poll)
   puts poll.question
   answers.each { |answer| puts "#{answer.id}) #{answer.choice}" }
   puts "What do you think?"
-  answer = gets.chomp
+  answer = Answer.find(gets.chomp.to_i)
   Response.add(user, answer, poll)
 end
 
@@ -62,13 +62,29 @@ def show_poll_results(poll)
   end
 end
 
+# def show_commands(user)
+#   puts "a) Create a poll"
+#   puts "b) Answer a poll"
+#   puts "c) View my polls"
+#   puts "d) Quit"
+#   case gets.chomp.split('')[0]
+#   when "a"
+
+#   when "b"
+#     poll = pick_poll(user)
+#     answer_poll(poll)
+#     show_poll_results(poll)
+#   when "c"
+#     Poll.
+# end
+
 
 # def run
 
 #   log_in
 
 #   show_commands
-# # ask, answer, quit commands
+#     # ask, answer, quit commands
 
 # # while true
 
@@ -87,8 +103,8 @@ end
 
 user = log_in
 poll = pick_poll(user)
-answer_poll(poll)
-show_poll_results(poll)
+answer_poll(user, poll[0])
+show_poll_results(poll[0])
 
 
 

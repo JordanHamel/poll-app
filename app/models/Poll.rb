@@ -18,8 +18,7 @@ class Poll < ActiveRecord::Base
   end
 
   def self.eligible_polls(user)
-    p user
-    Poll.includes(:responses).select(:question).where("user_id != ?", user.id)
+    Poll.includes(:responses).where("user_id != ?", user.id)
   end
 
   def add_answers(answers_array)

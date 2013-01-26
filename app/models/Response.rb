@@ -11,4 +11,14 @@ class Response < ActiveRecord::Base
     puts r.errors.full_messages unless r.errors.empty?
     r
   end
+
+  # User submits response and we show them results so far for poll, count for each answer for poll
+  def poll_responses(poll)
+    response_count = Answer.count_per_poll(poll)
+
+    responses = self.where(:poll_id => poll.id)
+    responses.each { |response| response_count[response.answer_id] += 1 }
+
+    response_count
+  end
 end

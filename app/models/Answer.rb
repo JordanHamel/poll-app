@@ -12,4 +12,11 @@ class Answer < ActiveRecord::Base
     puts a.errors.full_messages unless a.errors.empty?
     a
   end
+
+  def self.count_per_poll(poll)
+    answers = Answer.where(:poll_id => poll.id)
+    response_count = {}
+    answers.each { |answer| response_count[answer.id] = 0}
+    response_count
+  end
 end

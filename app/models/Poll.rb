@@ -8,18 +8,27 @@ class Poll < ActiveRecord::Base
   has_many :answers
   has_one :user
 
-  def self.add(question, user)
+  has_many :responses
+
+  def self.add(question, answers, user)
     p = Poll.create(:question => question, :user_id => user.id)
     puts p.errors.full_messages unless p.errors.empty?
-    p.add_answers
+    p.add_answers(answers)
+    p
   end
 
-  def add_answers
-    answer = ""
-    until answer == "quit"
-      puts "Add your next answer, type 'quit' to quit"
-      answer = gets.chomp
-      Answer.add(answer, self) unless answer == "quit"
-    end
+  def self.eligible_polls(user)
+    p user
+    Poll.includes(:responses).select(:question).where("user_id != ?", user.id)
+  end
+
+  def add_answers(answers_array)
+    answers_array.each { |answer| Answer.add(answer, self) }
+  end
+
+  def get_answers
+    answers = Answer.where(:poll_id => self.id)
+    puts self.question
+    answers
   end
 end
